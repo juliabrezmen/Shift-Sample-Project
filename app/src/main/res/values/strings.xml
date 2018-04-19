@@ -1,3 +1,6 @@
 <resources>
-    <string name="app_name">Deputy Technical Task</string>
+    <string name="app_name">Shift</string>
+
+    <!--Shift List screen-->
+    <string name="shifts_empty_list">You don\'t have any shift yet.</string>
 </resources>

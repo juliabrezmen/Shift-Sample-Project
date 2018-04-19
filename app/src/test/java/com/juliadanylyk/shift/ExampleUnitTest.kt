@@ -1,4 +1,4 @@
-package com.juliadanylyk.deputytechnicaltask
+package com.juliadanylyk.shift
 
 import org.junit.Test
 
