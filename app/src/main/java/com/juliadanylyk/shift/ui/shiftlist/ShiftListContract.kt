@@ -5,7 +5,7 @@ import com.juliadanylyk.shift.data.Shift
 interface ShiftListContract {
 
     interface Presenter {
-
+        fun onShiftClicked(shift: Shift)
     }
 
     interface View {
@@ -14,5 +14,9 @@ interface ShiftListContract {
         fun showEmptyView()
 
         fun hideEmptyView()
+
+        fun showLoading()
+
+        fun hideLoading()
     }
 }

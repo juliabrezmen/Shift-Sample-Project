@@ -16,25 +16,45 @@ import kotlinx.android.synthetic.main.item_shift.view.*
 
 class ShiftAdapter(private val context: Context) : ListAdapter<Shift, ShiftAdapter.ShiftViewHolder>(ShiftDiffCallback()) {
 
+    private lateinit var onItemClickListener: Listener
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ShiftViewHolder(LayoutInflater
             .from(context)
             .inflate(R.layout.item_shift, parent, false))
 
     override fun onBindViewHolder(holder: ShiftViewHolder, position: Int) = holder.bind(getItem(position))
 
+    fun setListener(onItemClickListener: Listener) {
+        this.onItemClickListener = onItemClickListener
+    }
+
     inner class ShiftViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(shift: Shift) {
-            shift.startTime?.let {
-                itemView.startTime.text = DateUtils.toDisplayableDate(it)
-            }
+            itemView.setOnClickListener { onItemClickListener.onShiftClicked(shift) }
+            itemView.startTime.text = DateUtils.toDisplayableDate(shift.startTime)
+
             shift.endTime?.let {
                 itemView.endTime.text = DateUtils.toDisplayableDate(it)
             }
-            DEPENDENCIES.imageLoader.load(ImageLoader.Params()
-                    .url(shift.image)
-                    .placeHolder(R.drawable.bg_gray_oval)
-                    .view(itemView.shiftImage))
+
+            // if there is no end time it means the shift is still in progress
+            if (shift.endTime == null) {
+                itemView.inProgress.visibility = View.VISIBLE
+            } else {
+                itemView.inProgress.visibility = View.GONE
+            }
+
+            shift.image.let {
+                DEPENDENCIES.imageLoader.load(ImageLoader.Params()
+                        .url(it)
+                        .placeHolder(R.drawable.bg_gray_oval)
+                        .view(itemView.shiftImage))
+            }
         }
+    }
+
+    interface Listener {
+        fun onShiftClicked(shift: Shift)
     }
 }
 

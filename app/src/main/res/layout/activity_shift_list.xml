@@ -7,6 +7,13 @@
     android:layout_height="match_parent"
     tools:context=".ui.shiftlist.ShiftListActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/MainToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        app:title="@string/shifts_toolbar"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/shifts"
         android:layout_width="0dp"
@@ -14,7 +21,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
 
     <TextView
         android:id="@+id/emptyView"
@@ -28,4 +35,17 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addShift"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@android:drawable/ic_input_add"
+        app:useCompatPadding="true"/>
 </android.support.constraint.ConstraintLayout>

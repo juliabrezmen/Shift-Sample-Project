@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/shiftImage"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/shift_details_image_height"
+        android:background="@drawable/bg_gray_rect"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/toolbar"
+        app:layout_constraintTop_toTopOf="@+id/toolbar"/>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/TransparentDetailsToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        app:title="@string/shift_details_toolbar"/>
+
+    <TextView
+        android:id="@+id/startTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shiftImage"
+        tools:text="@string/shift_details_start_time"/>
+
+    <TextView
+        android:id="@+id/endTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="@+id/startTime"
+        app:layout_constraintStart_toStartOf="@+id/startTime"
+        app:layout_constraintTop_toBottomOf="@+id/startTime"
+        tools:text="@string/shift_details_end_time"/>
+
+    <TextView
+        android:id="@+id/startLocation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="@+id/endTime"
+        app:layout_constraintStart_toStartOf="@+id/endTime"
+        app:layout_constraintTop_toBottomOf="@+id/endTime"
+        tools:text="@string/shift_details_start_location"/>
+
+    <TextView
+        android:id="@+id/endLocation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="@+id/startLocation"
+        app:layout_constraintStart_toStartOf="@+id/startLocation"
+        app:layout_constraintTop_toBottomOf="@+id/startLocation"
+        tools:text="@string/shift_details_end_location"/>
+
+    <Button
+        android:id="@+id/startShift"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/shift_details_start_shift"
+        android:textAllCaps="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible"/>
+
+    <Button
+        android:id="@+id/endShift"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/shift_details_end_shift"
+        android:textAllCaps="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible"/>
+</android.support.constraint.ConstraintLayout>

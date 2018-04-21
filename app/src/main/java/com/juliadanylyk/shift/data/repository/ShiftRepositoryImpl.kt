@@ -1,6 +1,7 @@
 package com.juliadanylyk.shift.data.repository
 
 import com.juliadanylyk.shift.data.Shift
+import com.juliadanylyk.shift.network.RequestResult
 import com.juliadanylyk.shift.network.ShiftService
 import com.juliadanylyk.shift.utils.Converter
 import ru.gildor.coroutines.retrofit.Result
@@ -13,6 +14,22 @@ class ShiftRepositoryImpl(private val shiftService: ShiftService) : ShiftReposit
         return when (result) {
             is Result.Ok -> Converter.toShifts(result.value)
             else -> listOf()
+        }
+    }
+
+    override suspend fun startShift(time: Long, latitude: Double, longitude: Double): RequestResult {
+        val result = shiftService.startShift(Converter.toShiftDto(time, latitude, longitude)).awaitResult()
+        return when (result) {
+            is Result.Ok -> RequestResult.Success()
+            else -> RequestResult.Failure()
+        }
+    }
+
+    override suspend fun endShift(time: Long, latitude: Double, longitude: Double): RequestResult {
+        val result = shiftService.endShift(Converter.toShiftDto(time, latitude, longitude)).awaitResult()
+        return when (result) {
+            is Result.Ok -> RequestResult.Success()
+            else -> RequestResult.Failure()
         }
     }
 }
