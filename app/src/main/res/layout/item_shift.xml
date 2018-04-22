@@ -12,6 +12,7 @@
         android:layout_width="@dimen/shift_list_image_size"
         android:layout_height="@dimen/shift_list_image_size"
         android:background="@drawable/bg_gray_oval"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>

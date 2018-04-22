@@ -10,7 +10,6 @@ class ImageLoader(private val context: Context) {
     fun load(params: Params) {
         Picasso.with(context)
                 .load(params.url)
-                .fit()
                 .placeholder(params.placeHolder)
                 .into(params.imageView)
     }
