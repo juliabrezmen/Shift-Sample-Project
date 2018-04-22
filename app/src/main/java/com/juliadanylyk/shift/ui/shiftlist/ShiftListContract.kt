@@ -20,5 +20,7 @@ interface ShiftListContract {
         fun showLoading()
 
         fun hideLoading()
+
+        fun showError()
     }
 }

@@ -53,7 +53,7 @@ class ShiftDetailsPresenter(private val view: ShiftDetailsContract.View,
         changeShift { shiftRepository.endShift(System.currentTimeMillis(), 89.5, -139.3) }
     }
 
-    private fun changeShift(change: suspend () -> RequestResult) = launch(context = UI, parent = job) {
+    private fun changeShift(change: suspend () -> RequestResult<Unit>) = launch(context = UI, parent = job) {
         view.showLoading()
         val result = withContext(CommonPool) { change() }
         view.hideLoading()

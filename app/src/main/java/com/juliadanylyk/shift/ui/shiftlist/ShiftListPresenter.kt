@@ -6,6 +6,7 @@ import android.arch.lifecycle.OnLifecycleEvent
 import com.juliadanylyk.shift.data.Shift
 import com.juliadanylyk.shift.data.repository.ShiftRepository
 import com.juliadanylyk.shift.navigator.Navigator
+import com.juliadanylyk.shift.network.RequestResult
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
@@ -40,9 +41,17 @@ class ShiftListPresenter(private val view: ShiftListContract.View,
     }
 
     private fun loadShifts() = launch(context = UI, parent = job) {
-        shifts = withContext(CommonPool) { shiftRepository.getShifts() }.sortedByDescending { it.startTime }
-        view.updateShifts(shifts)
+        val result = withContext(CommonPool) { shiftRepository.getShifts() }
         view.hideLoading()
+        when (result) {
+            is RequestResult.Success<List<Shift>> -> updateData(result.data)
+            is RequestResult.Failure -> view.showError()
+        }
+    }
+
+    private fun updateData(data: List<Shift>) {
+        shifts = data.sortedByDescending { it.startTime }
+        view.updateShifts(shifts)
         if (shifts.isEmpty()) {
             view.showEmptyView()
         } else {

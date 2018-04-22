@@ -1,6 +1,9 @@
 package com.juliadanylyk.shift.network
 
-sealed class RequestResult {
-    class Success : RequestResult()
-    class Failure : RequestResult()
+@Suppress("unused")
+sealed class RequestResult<out T : Any> {
+
+    class Success<out T : Any>(val data: T) : RequestResult<T>()
+
+    class Failure : RequestResult<Nothing>()
 }

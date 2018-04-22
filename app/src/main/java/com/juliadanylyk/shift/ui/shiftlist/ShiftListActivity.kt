@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import android.widget.Toast
 import com.juliadanylyk.shift.Dependencies.DEPENDENCIES
 import com.juliadanylyk.shift.R
 import com.juliadanylyk.shift.data.Shift
@@ -45,6 +46,10 @@ class ShiftListActivity : AppCompatActivity(), ShiftListContract.View {
 
     override fun hideLoading() {
         loadingDialog?.dismiss()
+    }
+
+    override fun showError() {
+        Toast.makeText(this, R.string.common_something_wrong, Toast.LENGTH_SHORT).show()
     }
 
     private fun initView() {

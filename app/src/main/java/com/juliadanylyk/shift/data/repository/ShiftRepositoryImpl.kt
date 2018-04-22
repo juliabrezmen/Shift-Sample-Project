@@ -9,26 +9,26 @@ import ru.gildor.coroutines.retrofit.awaitResult
 
 class ShiftRepositoryImpl(private val shiftService: ShiftService) : ShiftRepository {
 
-    override suspend fun getShifts(): List<Shift> {
+    override suspend fun getShifts(): RequestResult<List<Shift>> {
         val result = shiftService.getShifts().awaitResult()
         return when (result) {
-            is Result.Ok -> Converter.toShifts(result.value)
-            else -> listOf()
-        }
-    }
-
-    override suspend fun startShift(time: Long, latitude: Double, longitude: Double): RequestResult {
-        val result = shiftService.startShift(Converter.toShiftDto(time, latitude, longitude)).awaitResult()
-        return when (result) {
-            is Result.Ok -> RequestResult.Success()
+            is Result.Ok -> RequestResult.Success(Converter.toShifts(result.value))
             else -> RequestResult.Failure()
         }
     }
 
-    override suspend fun endShift(time: Long, latitude: Double, longitude: Double): RequestResult {
+    override suspend fun startShift(time: Long, latitude: Double, longitude: Double): RequestResult<Unit> {
+        val result = shiftService.startShift(Converter.toShiftDto(time, latitude, longitude)).awaitResult()
+        return when (result) {
+            is Result.Ok -> RequestResult.Success(Unit)
+            else -> RequestResult.Failure()
+        }
+    }
+
+    override suspend fun endShift(time: Long, latitude: Double, longitude: Double): RequestResult<Unit> {
         val result = shiftService.endShift(Converter.toShiftDto(time, latitude, longitude)).awaitResult()
         return when (result) {
-            is Result.Ok -> RequestResult.Success()
+            is Result.Ok -> RequestResult.Success(Unit)
             else -> RequestResult.Failure()
         }
     }
