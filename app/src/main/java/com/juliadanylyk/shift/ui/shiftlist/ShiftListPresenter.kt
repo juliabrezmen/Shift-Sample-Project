@@ -17,6 +17,7 @@ class ShiftListPresenter(private val view: ShiftListContract.View,
                          private val navigator: Navigator) : LifecycleObserver, ShiftListContract.Presenter {
 
     private val job: Job = Job()
+    private var shifts: List<Shift> = listOf()
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun startPresenting() {
@@ -33,8 +34,13 @@ class ShiftListPresenter(private val view: ShiftListContract.View,
         navigator.openShiftDetailsScreen(shift)
     }
 
+    override fun onAddShiftClicked() {
+        val currentShiftInProgress = shifts.find { it.inProgress() }
+        navigator.openShiftDetailsScreen(currentShiftInProgress)
+    }
+
     private fun loadShifts() = launch(context = UI, parent = job) {
-        val shifts = withContext(CommonPool) { shiftRepository.getShifts() }
+        shifts = withContext(CommonPool) { shiftRepository.getShifts() }.sortedByDescending { it.startTime }
         view.updateShifts(shifts)
         view.hideLoading()
         if (shifts.isEmpty()) {

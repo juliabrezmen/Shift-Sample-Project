@@ -6,5 +6,6 @@ interface Navigator {
 
     fun exitCurrentScreen()
 
-    fun openShiftDetailsScreen(shift: Shift)
+    //todo: leave a comment
+    fun openShiftDetailsScreen(shift: Shift?)
 }

@@ -17,4 +17,7 @@
     <string name="shift_details_end_location" formatted="true">End location: %1$f, %2$f</string>
     <string name="shift_details_start_shift">Start shift</string>
     <string name="shift_details_end_shift">End shift</string>
+    <string name="shift_details_new">Status: New</string>
+    <string name="shift_details_in_progress">Status: In Progress</string>
+    <string name="shift_details_completed">Status: Completed</string>
 </resources>

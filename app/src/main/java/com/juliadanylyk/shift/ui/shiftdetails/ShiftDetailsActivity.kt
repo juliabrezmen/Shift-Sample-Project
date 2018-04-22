@@ -22,7 +22,7 @@ class ShiftDetailsActivity : AppCompatActivity(), ShiftDetailsContract.View {
 
     companion object {
         private const val KEY_SHIFT = "KEY_SHIFT"
-        fun createIntent(context: Context, shift: Shift) = Intent(context, ShiftDetailsActivity::class.java)
+        fun createIntent(context: Context, shift: Shift?) = Intent(context, ShiftDetailsActivity::class.java)
                 .apply { putExtra(KEY_SHIFT, shift) }
     }
 
@@ -38,19 +38,21 @@ class ShiftDetailsActivity : AppCompatActivity(), ShiftDetailsContract.View {
     override fun getShiftFromExtras(): Shift? = intent.getParcelableExtra(KEY_SHIFT)
 
     override fun initNewState() {
+        status.text = getString(R.string.shift_details_new)
         startShift.visibility = View.VISIBLE
     }
 
     override fun initInProgressState(startTime: Long, startLatitude: Double, startLongitude: Double, image: String) {
+        status.text = getString(R.string.shift_details_in_progress)
         endShift.visibility = View.VISIBLE
         this.startTime.text = getString(R.string.shift_details_start_time, DateUtils.toDisplayableDate(startTime))
-        // todo: fix this problem
         this.startLocation.text = getString(R.string.shift_details_start_location, startLatitude, startLongitude)
         showShiftImage(image)
     }
 
     override fun initCompletedState(startTime: Long, startLatitude: Double, startLongitude: Double, endTime: Long,
                                     endLatitude: Double, endLongitude: Double, image: String) {
+        status.text = getString(R.string.shift_details_completed)
         this.startTime.text = getString(R.string.shift_details_start_time, DateUtils.toDisplayableDate(startTime))
         this.startLocation.text = getString(R.string.shift_details_start_location, startLatitude, startLongitude)
         this.endTime.text = getString(R.string.shift_details_end_time, DateUtils.toDisplayableDate(endTime))

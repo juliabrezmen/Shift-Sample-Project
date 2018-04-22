@@ -6,6 +6,8 @@ interface ShiftListContract {
 
     interface Presenter {
         fun onShiftClicked(shift: Shift)
+
+        fun onAddShiftClicked()
     }
 
     interface View {

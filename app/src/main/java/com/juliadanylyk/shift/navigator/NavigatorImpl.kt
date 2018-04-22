@@ -10,7 +10,7 @@ class NavigatorImpl(private val activity: Activity) : Navigator {
         activity.finish()
     }
 
-    override fun openShiftDetailsScreen(shift: Shift) {
+    override fun openShiftDetailsScreen(shift: Shift?) {
         activity.startActivity(ShiftDetailsActivity.createIntent(activity, shift))
     }
 }

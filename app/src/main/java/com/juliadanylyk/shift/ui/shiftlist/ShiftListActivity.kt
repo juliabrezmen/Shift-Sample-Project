@@ -48,18 +48,20 @@ class ShiftListActivity : AppCompatActivity(), ShiftListContract.View {
     }
 
     private fun initView() {
+        addShift.setOnClickListener { presenter.onAddShiftClicked() }
+
         shiftAdapter = ShiftAdapter(this)
         shiftAdapter.setListener(object : ShiftAdapter.Listener {
             override fun onShiftClicked(shift: Shift) {
                 presenter.onShiftClicked(shift)
             }
         })
+
         with(shifts) {
             adapter = shiftAdapter
             layoutManager = LinearLayoutManager(this@ShiftListActivity)
             addItemDecoration(ListDivider.createDivider(this@ShiftListActivity))
         }
-//        addShift.setOnClickListener { presenter.onShiftClicked() }
     }
 
     private fun initPresenter() {
