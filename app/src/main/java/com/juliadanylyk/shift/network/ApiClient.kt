@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 
 class ApiClient {
     // TODO: move base url in config file
-    private val BASE_URL = "https://apjoqdqpi3.execute-api.us-west-2.amazonaws.com"
+    private val baseUrl = "https://apjoqdqpi3.execute-api.us-west-2.amazonaws.com"
 
     private val okHttpClientBuilder = OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor())
@@ -19,7 +19,7 @@ class ApiClient {
 
     private val shiftService =
             Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(okHttpClientBuilder.build())
                     .build()

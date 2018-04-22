@@ -3,17 +3,20 @@ package com.juliadanylyk.shift.ui.shiftdetails
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
+import com.juliadanylyk.Dispatcher
+import com.juliadanylyk.location.LocationManager
+import com.juliadanylyk.shift.R
 import com.juliadanylyk.shift.data.repository.ShiftRepository
 import com.juliadanylyk.shift.navigator.Navigator
 import com.juliadanylyk.shift.network.RequestResult
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 
 class ShiftDetailsPresenter(private val view: ShiftDetailsContract.View,
                             private val shiftRepository: ShiftRepository,
+                            private val locationManager: LocationManager,
+                            private val dispatcher: Dispatcher,
                             private val navigator: Navigator) : LifecycleObserver, ShiftDetailsContract.Presenter {
 
     private val job: Job = Job()
@@ -23,9 +26,11 @@ class ShiftDetailsPresenter(private val view: ShiftDetailsContract.View,
         val shift = view.getShiftFromExtras()
         val state = when {
             shift == null -> ShiftState.New()
-            shift.endTime == null -> ShiftState.InProgress(shift.startTime, shift.startLatitude, shift.startLongitude, shift.image)
-            else -> ShiftState.Completed(shift.startTime, shift.startLatitude, shift.startLongitude,
-                    shift.endTime, shift.endLatitude!!, shift.endLongitude!!, shift.image)
+            shift.inProgress() -> ShiftState.InProgress(shift.startTime, shift.startLatitude, shift.startLongitude, shift.image)
+            else -> ShiftState.Completed(
+                    shift.startTime, shift.startLatitude, shift.startLongitude,
+                    shift.endTime!!, shift.endLatitude!!, shift.endLongitude!!,
+                    shift.image)
         }
 
         when (state) {
@@ -46,27 +51,60 @@ class ShiftDetailsPresenter(private val view: ShiftDetailsContract.View,
     }
 
     override fun onStartShiftClicked() {
-        changeShift { shiftRepository.startShift(System.currentTimeMillis(), 89.5, -139.3) }
-    }
-
-    override fun onEndShiftClicked() {
-        changeShift { shiftRepository.endShift(System.currentTimeMillis(), 89.5, -139.3) }
-    }
-
-    private fun changeShift(change: suspend () -> RequestResult<Unit>) = launch(context = UI, parent = job) {
-        view.showLoading()
-        val result = withContext(CommonPool) { change() }
-        view.hideLoading()
-        when (result) {
-            is RequestResult.Success -> navigator.exitWithResultCodeOk()
-            is RequestResult.Failure -> view.showError()
+        view.requestLocationPermission { granted ->
+            if (granted) requestStartLocation()
         }
     }
 
+    override fun onEndShiftClicked() {
+        view.requestLocationPermission { granted ->
+            if (granted) requestEndLocation()
+        }
+    }
+
+    private fun requestStartLocation() = launch(dispatcher.ui, parent = job) {
+        val location = locationManager.getLastLocation()
+        if (location != null) {
+            changeShift { shiftRepository.startShift(System.currentTimeMillis(), location.latitude, location.longitude) }
+        } else {
+            view.showToast(R.string.location_not_found)
+        }
+    }
+
+    private fun requestEndLocation() = launch(dispatcher.ui, parent = job) {
+        val lastLocation = locationManager.getLastLocation()
+        if (lastLocation != null) {
+            changeShift { shiftRepository.endShift(System.currentTimeMillis(), lastLocation.latitude, lastLocation.longitude) }
+        } else {
+            view.showToast(R.string.location_not_found)
+        }
+    }
+
+    private suspend fun changeShift(change: suspend () -> RequestResult<Unit>) {
+        view.showLoading()
+        val result = withContext(dispatcher.background) { change() }
+        when (result) {
+            is RequestResult.Success -> navigator.exitWithResultCodeOk()
+            is RequestResult.Failure -> view.showToast(R.string.internet_connection_error)
+        }
+        view.hideLoading()
+    }
+
     sealed class ShiftState {
+
         class New : ShiftState()
-        data class InProgress(val startTime: Long, val startLatitude: Double, val startLongitude: Double, val image: String) : ShiftState()
-        class Completed(val startTime: Long, val startLatitude: Double, val startLongitude: Double,
-                        val endTime: Long, val endLatitude: Double, val endLongitude: Double, val image: String) : ShiftState()
+
+        data class InProgress(val startTime: Long,
+                              val startLatitude: Double,
+                              val startLongitude: Double,
+                              val image: String) : ShiftState()
+
+        class Completed(val startTime: Long,
+                        val startLatitude: Double,
+                        val startLongitude: Double,
+                        val endTime: Long,
+                        val endLatitude: Double,
+                        val endLongitude: Double,
+                        val image: String) : ShiftState()
     }
 }

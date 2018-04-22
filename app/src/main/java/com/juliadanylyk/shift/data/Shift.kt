@@ -12,5 +12,6 @@ data class Shift(val id: Int,
                  val endLatitude: Double?,
                  val endLongitude: Double?,
                  val image: String) : Parcelable {
+
     fun inProgress() = endTime == null
 }

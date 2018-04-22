@@ -16,8 +16,8 @@ class Converter {
                         DateUtils.parseUtcDate(result.endTime),
                         result.startLatitude.toDouble(),
                         result.startLongitude.toDouble(),
-                        result.endLatitude.toDouble(),
-                        result.endLongitude.toDouble(),
+                        result.endLatitude?.toDouble(),
+                        result.endLongitude?.toDouble(),
                         result.imageUrl))
             }
             return shifts

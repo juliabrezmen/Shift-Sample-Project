@@ -2,7 +2,8 @@
     <string name="app_name">Shift</string>
 
     <string name="common_loading">Loading..</string>
-    <string name="common_something_wrong">Something wrong..</string>
+    <string name="internet_connection_error">Internet Connection Error</string>
+    <string name="location_not_found">Location not found</string>
 
     <!--Shift List screen-->
     <string name="shifts_toolbar">Shifts</string>
@@ -12,8 +13,10 @@
     <!--Shift Details screen-->
     <string name="shift_details_toolbar">Shift Details</string>
     <string name="shift_details_start_time" formatted="true">Start time: %s</string>
+    <string name="shift_details_start_time_now">Start time: now</string>
     <string name="shift_details_end_time" formatted="true">End time: %s</string>
     <string name="shift_details_start_location" formatted="true">Start location: %1$f, %2$f</string>
+    <string name="shift_details_start_location_now">Start location: current</string>
     <string name="shift_details_end_location" formatted="true">End location: %1$f, %2$f</string>
     <string name="shift_details_start_shift">Start shift</string>
     <string name="shift_details_end_shift">End shift</string>

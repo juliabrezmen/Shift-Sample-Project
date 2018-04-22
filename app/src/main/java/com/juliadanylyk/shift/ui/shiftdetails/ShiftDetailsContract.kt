@@ -1,5 +1,6 @@
 package com.juliadanylyk.shift.ui.shiftdetails
 
+import android.support.annotation.StringRes
 import com.juliadanylyk.shift.data.Shift
 
 interface ShiftDetailsContract {
@@ -26,6 +27,8 @@ interface ShiftDetailsContract {
 
         fun hideLoading()
 
-        fun showError()
+        fun showToast(@StringRes message: Int)
+
+        fun requestLocationPermission(callback: (granted: Boolean) -> Unit)
     }
 }

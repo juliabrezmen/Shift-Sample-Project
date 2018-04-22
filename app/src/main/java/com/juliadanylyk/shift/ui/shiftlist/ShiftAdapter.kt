@@ -7,14 +7,13 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.juliadanylyk.shift.Dependencies.DEPENDENCIES
 import com.juliadanylyk.shift.R
 import com.juliadanylyk.shift.data.Shift
 import com.juliadanylyk.shift.imageloader.ImageLoader
 import com.juliadanylyk.shift.utils.DateUtils
 import kotlinx.android.synthetic.main.item_shift.view.*
 
-class ShiftAdapter(private val context: Context) : ListAdapter<Shift, ShiftAdapter.ShiftViewHolder>(ShiftDiffCallback()) {
+class ShiftAdapter(private val context: Context, val imageLoader: ImageLoader) : ListAdapter<Shift, ShiftAdapter.ShiftViewHolder>(ShiftDiffCallback()) {
 
     private lateinit var onItemClickListener: Listener
 
@@ -45,7 +44,7 @@ class ShiftAdapter(private val context: Context) : ListAdapter<Shift, ShiftAdapt
             }
 
             shift.image.let {
-                DEPENDENCIES.imageLoader.load(ImageLoader.Params()
+                imageLoader.load(ImageLoader.Params()
                         .url(it)
                         .placeHolder(R.drawable.bg_gray_oval)
                         .view(itemView.shiftImage))

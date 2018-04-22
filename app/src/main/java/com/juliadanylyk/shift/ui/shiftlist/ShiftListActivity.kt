@@ -3,18 +3,19 @@ package com.juliadanylyk.shift.ui.shiftlist
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
-import com.juliadanylyk.shift.Dependencies.DEPENDENCIES
+import com.juliadanylyk.DispatcherImpl
+import com.juliadanylyk.shift.Dependencies
 import com.juliadanylyk.shift.R
 import com.juliadanylyk.shift.data.Shift
 import com.juliadanylyk.shift.navigator.NavigatorImpl
+import com.juliadanylyk.shift.ui.base.BaseActivity
 import com.juliadanylyk.shift.views.ListDivider
 import kotlinx.android.synthetic.main.activity_shift_list.*
 
-class ShiftListActivity : AppCompatActivity(), ShiftListContract.View {
+class ShiftListActivity : BaseActivity(), ShiftListContract.View {
 
     private lateinit var presenter: ShiftListContract.Presenter
     private lateinit var shiftAdapter: ShiftAdapter
@@ -59,14 +60,14 @@ class ShiftListActivity : AppCompatActivity(), ShiftListContract.View {
     }
 
     override fun showError() {
-        Toast.makeText(this, R.string.common_something_wrong, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, R.string.internet_connection_error, Toast.LENGTH_SHORT).show()
     }
 
     private fun initView() {
         addShift.setOnClickListener { presenter.onAddShiftClicked() }
         swipeRefresh.setOnRefreshListener { presenter.onPullToRefresh() }
 
-        shiftAdapter = ShiftAdapter(this)
+        shiftAdapter = ShiftAdapter(this, Dependencies.imageLoader)
         shiftAdapter.setListener(object : ShiftAdapter.Listener {
             override fun onShiftClicked(shift: Shift) {
                 presenter.onShiftClicked(shift)
@@ -81,7 +82,10 @@ class ShiftListActivity : AppCompatActivity(), ShiftListContract.View {
     }
 
     private fun initPresenter() {
-        val presenter = ShiftListPresenter(this, DEPENDENCIES.shiftRepository, NavigatorImpl(this))
+        val presenter = ShiftListPresenter(this,
+                Dependencies.shiftRepository,
+                DispatcherImpl,
+                NavigatorImpl(this))
         lifecycle.addObserver(presenter)
         this.presenter = presenter
     }

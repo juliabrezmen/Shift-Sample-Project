@@ -3,19 +3,19 @@ package com.juliadanylyk.shift.ui.shiftlist
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
+import com.juliadanylyk.Dispatcher
 import com.juliadanylyk.shift.data.Shift
 import com.juliadanylyk.shift.data.repository.ShiftRepository
 import com.juliadanylyk.shift.navigator.Navigator
 import com.juliadanylyk.shift.network.RequestResult
 import com.juliadanylyk.shift.ui.common.SHIFT_DETAILS_REQUEST_CODE
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 
 class ShiftListPresenter(private val view: ShiftListContract.View,
                          private val shiftRepository: ShiftRepository,
+                         private val dispatcher: Dispatcher,
                          private val navigator: Navigator) : LifecycleObserver, ShiftListContract.Presenter {
 
     private val job: Job = Job()
@@ -50,9 +50,9 @@ class ShiftListPresenter(private val view: ShiftListContract.View,
         }
     }
 
-    private fun loadShifts() = launch(context = UI, parent = job) {
+    private fun loadShifts() = launch(dispatcher.ui, parent = job) {
         view.showLoading()
-        val result = withContext(CommonPool) { shiftRepository.getShifts() }
+        val result = withContext(dispatcher.background) { shiftRepository.getShifts() }
         view.hideLoading()
         when (result) {
             is RequestResult.Success<List<Shift>> -> updateData(result.data)

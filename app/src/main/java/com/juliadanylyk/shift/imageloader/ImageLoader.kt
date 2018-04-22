@@ -1,11 +1,11 @@
 package com.juliadanylyk.shift.imageloader
 
-import android.content.Context
+import android.app.Application
 import android.support.annotation.DrawableRes
 import android.widget.ImageView
 import com.squareup.picasso.Picasso
 
-class ImageLoader(private val context: Context) {
+class ImageLoader(private val context: Application) {
 
     fun load(params: Params) {
         Picasso.with(context)

@@ -1,21 +1,26 @@
 package com.juliadanylyk.shift.ui.shiftdetails
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import android.support.annotation.StringRes
 import android.view.View
 import android.widget.Toast
-import com.juliadanylyk.shift.Dependencies.DEPENDENCIES
+import com.juliadanylyk.DispatcherImpl
+import com.juliadanylyk.location.LocationManagerImpl
+import com.juliadanylyk.shift.Dependencies
 import com.juliadanylyk.shift.R
 import com.juliadanylyk.shift.data.Shift
 import com.juliadanylyk.shift.imageloader.ImageLoader
 import com.juliadanylyk.shift.navigator.NavigatorImpl
+import com.juliadanylyk.shift.ui.base.BaseActivity
+import com.juliadanylyk.shift.ui.common.LOCATION_REQUEST_CODE
 import com.juliadanylyk.shift.ui.common.LoadingDialog
 import com.juliadanylyk.shift.utils.DateUtils
 import kotlinx.android.synthetic.main.activity_shift_details.*
 
-class ShiftDetailsActivity : AppCompatActivity(), ShiftDetailsContract.View {
+class ShiftDetailsActivity : BaseActivity(), ShiftDetailsContract.View {
 
     private lateinit var presenter: ShiftDetailsContract.Presenter
     private var loadingDialog: LoadingDialog? = null
@@ -39,6 +44,8 @@ class ShiftDetailsActivity : AppCompatActivity(), ShiftDetailsContract.View {
 
     override fun initNewState() {
         status.text = getString(R.string.shift_details_new)
+        startTime.text = getString(R.string.shift_details_start_time_now)
+        startLocation.text = getString(R.string.shift_details_start_location_now)
         startShift.visibility = View.VISIBLE
     }
 
@@ -62,19 +69,23 @@ class ShiftDetailsActivity : AppCompatActivity(), ShiftDetailsContract.View {
 
     override fun showLoading() {
         loadingDialog = LoadingDialog(this)
-        loadingDialog!!.show(getString(R.string.common_loading))
+        loadingDialog?.show(getString(R.string.common_loading))
     }
 
     override fun hideLoading() {
         loadingDialog?.dismiss()
     }
 
-    override fun showError() {
-        Toast.makeText(this, R.string.common_something_wrong, Toast.LENGTH_SHORT).show()
+    override fun showToast(@StringRes message: Int) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun requestLocationPermission(callback: (granted: Boolean) -> Unit) {
+        requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, LOCATION_REQUEST_CODE, callback)
     }
 
     private fun showShiftImage(url: String) {
-        DEPENDENCIES.imageLoader.load(ImageLoader.Params()
+        Dependencies.imageLoader.load(ImageLoader.Params()
                 .url(url)
                 .placeHolder(R.drawable.bg_gray_rect)
                 .view(shiftImage))
@@ -93,7 +104,11 @@ class ShiftDetailsActivity : AppCompatActivity(), ShiftDetailsContract.View {
     }
 
     private fun initPresenter() {
-        val presenter = ShiftDetailsPresenter(this, DEPENDENCIES.shiftRepository, NavigatorImpl(this))
+        val presenter = ShiftDetailsPresenter(this,
+                Dependencies.shiftRepository,
+                LocationManagerImpl(this),
+                DispatcherImpl,
+                NavigatorImpl(this))
         lifecycle.addObserver(presenter)
         this.presenter = presenter
     }
