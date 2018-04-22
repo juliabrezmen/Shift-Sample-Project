@@ -8,6 +8,8 @@ interface ShiftListContract {
         fun onShiftClicked(shift: Shift)
 
         fun onAddShiftClicked()
+
+        fun onPullToRefresh()
     }
 
     interface View {

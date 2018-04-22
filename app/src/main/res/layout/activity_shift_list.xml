@@ -14,14 +14,24 @@
         android:layout_height="?actionBarSize"
         app:title="@string/shifts_toolbar"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/shifts"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/shifts"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/swipeRefresh"
+            app:layout_constraintLeft_toLeftOf="@+id/swipeRefresh"
+            app:layout_constraintRight_toRightOf="@+id/swipeRefresh"
+            app:layout_constraintTop_toTopOf="@+id/swipeRefresh"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <TextView
         android:id="@+id/emptyView"

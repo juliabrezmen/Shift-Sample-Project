@@ -22,7 +22,6 @@ class ShiftListPresenter(private val view: ShiftListContract.View,
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun startPresenting() {
-        view.showLoading()
         loadShifts()
     }
 
@@ -40,7 +39,12 @@ class ShiftListPresenter(private val view: ShiftListContract.View,
         navigator.openShiftDetailsScreen(currentShiftInProgress)
     }
 
+    override fun onPullToRefresh() {
+        loadShifts()
+    }
+
     private fun loadShifts() = launch(context = UI, parent = job) {
+        view.showLoading()
         val result = withContext(CommonPool) { shiftRepository.getShifts() }
         view.hideLoading()
         when (result) {
