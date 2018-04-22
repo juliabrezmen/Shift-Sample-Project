@@ -7,6 +7,7 @@ import com.juliadanylyk.shift.data.Shift
 import com.juliadanylyk.shift.data.repository.ShiftRepository
 import com.juliadanylyk.shift.navigator.Navigator
 import com.juliadanylyk.shift.network.RequestResult
+import com.juliadanylyk.shift.ui.common.SHIFT_DETAILS_REQUEST_CODE
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
@@ -31,16 +32,22 @@ class ShiftListPresenter(private val view: ShiftListContract.View,
     }
 
     override fun onShiftClicked(shift: Shift) {
-        navigator.openShiftDetailsScreen(shift)
+        navigator.openShiftDetailsScreen(shift, SHIFT_DETAILS_REQUEST_CODE)
     }
 
     override fun onAddShiftClicked() {
         val currentShiftInProgress = shifts.find { it.inProgress() }
-        navigator.openShiftDetailsScreen(currentShiftInProgress)
+        navigator.openShiftDetailsScreen(currentShiftInProgress, SHIFT_DETAILS_REQUEST_CODE)
     }
 
     override fun onPullToRefresh() {
         loadShifts()
+    }
+
+    override fun onActivityResultOk(requestCode: Int) {
+        if (SHIFT_DETAILS_REQUEST_CODE == requestCode) {
+            loadShifts()
+        }
     }
 
     private fun loadShifts() = launch(context = UI, parent = job) {

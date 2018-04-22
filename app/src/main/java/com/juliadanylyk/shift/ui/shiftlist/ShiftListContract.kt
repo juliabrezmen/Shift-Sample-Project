@@ -10,6 +10,8 @@ interface ShiftListContract {
         fun onAddShiftClicked()
 
         fun onPullToRefresh()
+
+        fun onActivityResultOk(requestCode: Int)
     }
 
     interface View {

@@ -1,5 +1,7 @@
 package com.juliadanylyk.shift.ui.shiftlist
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -23,6 +25,13 @@ class ShiftListActivity : AppCompatActivity(), ShiftListContract.View {
 
         initView()
         initPresenter()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (Activity.RESULT_OK == resultCode) {
+            presenter.onActivityResultOk(requestCode)
+        }
     }
 
     override fun updateShifts(shifts: List<Shift>) {

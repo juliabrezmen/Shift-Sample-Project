@@ -6,6 +6,8 @@ interface Navigator {
 
     fun exitCurrentScreen()
 
-    //todo: leave a comment
-    fun openShiftDetailsScreen(shift: Shift?)
+    fun exitWithResultCodeOk()
+
+    //todo: leave a comment to explain when shift can be null
+    fun openShiftDetailsScreen(shift: Shift?, requestCode: Int)
 }

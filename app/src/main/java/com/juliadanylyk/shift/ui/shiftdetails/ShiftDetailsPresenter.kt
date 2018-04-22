@@ -58,7 +58,7 @@ class ShiftDetailsPresenter(private val view: ShiftDetailsContract.View,
         val result = withContext(CommonPool) { change() }
         view.hideLoading()
         when (result) {
-            is RequestResult.Success -> navigator.exitCurrentScreen()
+            is RequestResult.Success -> navigator.exitWithResultCodeOk()
             is RequestResult.Failure -> view.showError()
         }
     }
