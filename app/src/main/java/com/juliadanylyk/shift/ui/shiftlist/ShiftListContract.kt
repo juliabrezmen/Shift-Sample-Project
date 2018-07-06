@@ -15,16 +15,13 @@ interface ShiftListContract {
     }
 
     interface View {
-        fun updateShifts(shifts: List<Shift>)
-
-        fun showEmptyView()
-
-        fun hideEmptyView()
-
-        fun showLoading()
-
-        fun hideLoading()
-
-        fun showError()
+        fun render(state: ViewState)
     }
+
+    data class ViewState(
+            val emptyViewVisible: Boolean = true,
+            val loadingVisible: Boolean = false,
+            val showInternetConnectionError: Boolean = false,
+            val shifts: List<Shift> = emptyList()
+    )
 }

@@ -19,6 +19,7 @@ class ShiftListActivity : BaseActivity(), ShiftListContract.View {
 
     private lateinit var presenter: ShiftListContract.Presenter
     private lateinit var shiftAdapter: ShiftAdapter
+    private var previousState: ShiftListContract.ViewState = ShiftListContract.ViewState()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,32 +36,37 @@ class ShiftListActivity : BaseActivity(), ShiftListContract.View {
         }
     }
 
-    override fun updateShifts(shifts: List<Shift>) {
-        shiftAdapter.submitList(shifts)
-    }
-
-    override fun showEmptyView() {
-        emptyView.visibility = View.VISIBLE
-    }
-
-    override fun hideEmptyView() {
-        emptyView.visibility = View.GONE
-    }
-
-    override fun showLoading() {
-        if (!swipeRefresh.isRefreshing) {
-            swipeRefresh.isRefreshing = true
+    override fun render(state: ShiftListContract.ViewState) {
+        if (previousState.emptyViewVisible != state.emptyViewVisible) {
+            if (state.emptyViewVisible) {
+                emptyView.visibility = View.VISIBLE
+            } else {
+                emptyView.visibility = View.GONE
+            }
         }
-    }
 
-    override fun hideLoading() {
-        if (swipeRefresh.isRefreshing) {
-            swipeRefresh.isRefreshing = false
+        if (previousState.loadingVisible != state.loadingVisible) {
+            if (state.loadingVisible) {
+                if (!swipeRefresh.isRefreshing) {
+                    swipeRefresh.isRefreshing = true
+                }
+            } else {
+                if (swipeRefresh.isRefreshing) {
+                    swipeRefresh.isRefreshing = false
+                }
+            }
         }
-    }
 
-    override fun showError() {
-        Toast.makeText(this, R.string.internet_connection_error, Toast.LENGTH_SHORT).show()
+        if (previousState.showInternetConnectionError != state.showInternetConnectionError) {
+            if (state.showInternetConnectionError) {
+                Toast.makeText(this, R.string.internet_connection_error, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        if (previousState.shifts != state.shifts) {
+            shiftAdapter.submitList(state.shifts)
+        }
+        previousState = state
     }
 
     private fun initView() {

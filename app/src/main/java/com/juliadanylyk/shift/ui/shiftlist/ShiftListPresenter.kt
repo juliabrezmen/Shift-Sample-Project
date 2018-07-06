@@ -19,7 +19,7 @@ class ShiftListPresenter(private val view: ShiftListContract.View,
                          private val navigator: Navigator) : LifecycleObserver, ShiftListContract.Presenter {
 
     private val job: Job = Job()
-    private var shifts: List<Shift> = listOf()
+    private var viewState = ShiftListContract.ViewState()
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun startPresenting() {
@@ -36,7 +36,7 @@ class ShiftListPresenter(private val view: ShiftListContract.View,
     }
 
     override fun onAddShiftClicked() {
-        val currentShiftInProgress = shifts.find { it.inProgress() }
+        val currentShiftInProgress = viewState.shifts.find { it.inProgress() }
         navigator.openShiftDetailsScreen(currentShiftInProgress, SHIFT_DETAILS_REQUEST_CODE)
     }
 
@@ -51,22 +51,23 @@ class ShiftListPresenter(private val view: ShiftListContract.View,
     }
 
     private fun loadShifts() = launch(dispatcher.ui, parent = job) {
-        view.showLoading()
+        changeState(viewState.copy(loadingVisible = true))
+
         val result = withContext(dispatcher.background) { shiftRepository.getShifts() }
-        view.hideLoading()
         when (result) {
-            is RequestResult.Success<List<Shift>> -> updateData(result.data)
-            is RequestResult.Failure -> view.showError()
+            is RequestResult.Success<List<Shift>> -> changeState(viewState.copy(
+                    shifts = result.data.sortedByDescending { it.startTime },
+                    emptyViewVisible = result.data.isEmpty(),
+                    loadingVisible = false))
+            is RequestResult.Failure -> {
+                changeState(viewState.copy(loadingVisible = false, showInternetConnectionError = true))
+                changeState(viewState.copy(showInternetConnectionError = false))
+            }
         }
     }
 
-    private fun updateData(data: List<Shift>) {
-        shifts = data.sortedByDescending { it.startTime }
-        view.updateShifts(shifts)
-        if (shifts.isEmpty()) {
-            view.showEmptyView()
-        } else {
-            view.hideEmptyView()
-        }
+    private fun changeState(state: ShiftListContract.ViewState) {
+        viewState = state
+        view.render(viewState)
     }
 }
