@@ -1,4 +1,4 @@
-package com.juliadanylyk.shift.data.repository
+package com.juliadanylyk.shift.repository
 
 import com.juliadanylyk.shift.data.Shift
 import com.juliadanylyk.shift.network.RequestResult

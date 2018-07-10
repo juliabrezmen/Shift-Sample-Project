@@ -64,7 +64,7 @@ class ShiftListActivity : BaseActivity(), ShiftListContract.View {
         }
 
         if (previousState.shifts != state.shifts) {
-            shiftAdapter.submitList(state.shifts)
+            shiftAdapter.submitList(state.pagedShifts)
         }
         previousState = state
     }

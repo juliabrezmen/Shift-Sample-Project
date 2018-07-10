@@ -6,7 +6,7 @@ import android.arch.lifecycle.OnLifecycleEvent
 import com.juliadanylyk.Dispatcher
 import com.juliadanylyk.location.LocationManager
 import com.juliadanylyk.shift.R
-import com.juliadanylyk.shift.data.repository.ShiftRepository
+import com.juliadanylyk.shift.repository.ShiftRepository
 import com.juliadanylyk.shift.navigator.Navigator
 import com.juliadanylyk.shift.network.RequestResult
 import kotlinx.coroutines.experimental.Job

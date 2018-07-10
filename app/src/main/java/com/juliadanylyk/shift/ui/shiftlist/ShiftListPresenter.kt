@@ -3,11 +3,15 @@ package com.juliadanylyk.shift.ui.shiftlist
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
+import android.arch.paging.LivePagedListBuilder
+import android.arch.paging.PagedList
+import android.nfc.tech.MifareUltralight.PAGE_SIZE
 import com.juliadanylyk.Dispatcher
+import com.juliadanylyk.shift.Dependencies
 import com.juliadanylyk.shift.data.Shift
-import com.juliadanylyk.shift.data.repository.ShiftRepository
 import com.juliadanylyk.shift.navigator.Navigator
 import com.juliadanylyk.shift.network.RequestResult
+import com.juliadanylyk.shift.repository.ShiftRepository
 import com.juliadanylyk.shift.ui.common.SHIFT_DETAILS_REQUEST_CODE
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
@@ -24,6 +28,12 @@ class ShiftListPresenter(private val view: ShiftListContract.View,
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun startPresenting() {
         loadShifts()
+
+        val shifts = LivePagedListBuilder(Dependencies.shiftDao.getShifts(), PagedList.Config.Builder()
+                .setPageSize(PAGE_SIZE)
+//                .setEnablePlaceholders(ENABLE_PLACEHOLDERS)
+                .build()).build()
+        shifts.observeForever { view.render(viewState.copy(pagedShifts = it)) }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
